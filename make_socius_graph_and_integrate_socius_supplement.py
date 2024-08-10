@@ -430,10 +430,24 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
 
     fig.data[1]["marker"]["symbol"]="circle"
     fig.data[1]["marker"]["color"]="#0B6623"
+    fig.data[1]["marker"]["line"]["width"]=1
+    fig.data[1]["marker"]["line"]["color"]='black'
+
     fig.data[0]["marker"]["symbol"]="circle"
     fig.data[0]["marker"]["line"]["width"]=1
     fig.data[0]["marker"]["line"]["color"]="#768692"
     fig.data[0]["marker"]["color"]="white"
+    fig.add_vline(0, line_width=2, line_color="DarkSlateGrey")
+    fig.add_hline(0, line_width=2, line_color="DarkSlateGrey")
+
+    fig.update_xaxes(ticks="outside",
+                    tickcolor="white",  # adjust color of the tick
+                    ticklen=4  # adjust length of the tick = distance from axis
+                    )
+    fig.update_yaxes(ticks="outside",
+                    tickcolor="white",  # adjust color of the tick
+                    ticklen=4  # adjust length of the tick = distance from axis
+                    )
 
     #move the legend to the bottom left of the graph and make it horizontal
     fig.update_layout(
@@ -447,8 +461,7 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
             #put HBCUs first in the legend order, then military colleges second, then all other schools third and the line 4th
             traceorder="reversed"
         ),
-        #make the graph area background light yellow
-        plot_bgcolor='#FFFDD0',
+        plot_bgcolor='white',
     )
 
     fig.show()
@@ -681,7 +694,7 @@ HBCU_production_by_size.update_layout(
         title="Horizontal lines show the percentage of campuses in each category",
         barmode='stack',
         legend_title_text='Campus ROTC size category:<br> Number of officers<br> commissioned per year',
-        plot_bgcolor='#FFFDD0',
+        plot_bgcolor='white',
     )
 
 HBCU_production_by_size.show()
