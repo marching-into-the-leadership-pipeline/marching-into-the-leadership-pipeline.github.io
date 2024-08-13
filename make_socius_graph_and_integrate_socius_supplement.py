@@ -366,7 +366,7 @@ for fig_name in ["percent_female_scatterplot", "completion_rate_scatter"]:
     if fig_name != "completion_rate_scatter":
         fig.add_trace(go.Scatter(x=[0,70], y=[0,70], line_shape='linear',
                                                         mode='lines', 
-                                                        line=dict(width=1, color="DarkSlateGrey"),
+                                                        line=dict(width=.7, color="Gray", dash='dot'),
                                                         showlegend = False,
                                                         #we moved the legend entry to the text of the paper, so no longer need it here
                                                         #name = "Women make up the same percentage of students<br> and officers commissioned through ROTC", 
@@ -437,9 +437,11 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
     fig.data[0]["marker"]["line"]["width"]=1
     fig.data[0]["marker"]["line"]["color"]="#768692"
     fig.data[0]["marker"]["color"]="white"
-    fig.add_vline(0, line_width=2, line_color="DarkSlateGrey")
-    fig.add_hline(0, line_width=2, line_color="DarkSlateGrey")
+    fig.add_vline(0, line_width=1.4, line_color="gray")
+    fig.add_hline(0, line_width=1.4, line_color="gray")
 
+    # repurpose the tick length parameter to add spacing between
+    # the axis label numbers and the axis line
     fig.update_xaxes(ticks="outside",
                     tickcolor="white",  # adjust color of the tick
                     ticklen=4  # adjust length of the tick = distance from axis
