@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Creator: CorelDRAW Home & Student 2018 -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="42px" height="54px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 42 54.35"
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="151px" height="54px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 151 54"
  xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <style type="text/css">
    <![CDATA[
-    .fil0 {fill:black}
-    .fil1 {fill:blue}
-    .fil3 {fill:#669933}
-    .fil2 {fill:#9900CC}
-    .fnt0 {font-weight:normal;font-size:1.65px;font-family:'Bauhaus 93'}
+    .fil0 {fill:blue}
+    .fnt0 {font-weight:normal;font-size:50px;font-family:'Arial Rounded MT Bold'}
    ]]>
   </style>
  </defs>
  <g id="Layer_x0020_1">
   <metadata id="CorelCorpID_0Corel-Layer"/>
-  <text x="10.93" y="5.69"  class="fil0 fnt0">Proof of concept</text>
-  <text x="13.52" y="7.55"  class="fil1 fnt0">This is not </text>
-  <text x="12.34" y="9.42"  class="fil1 fnt0">a </text>
-  <text x="17.24" y="9.42"  class="fil1 fnt0"> </text>
-  <text x="13.72" y="9.42"  class="fil2 fnt0">Sage</text>
-  <text x="17.65" y="9.42"  class="fil3 fnt0">server</text>
+  <text x="4.28" y="40.01"  class="fil0 fnt0">Demo</text>
  </g>
 </svg>
