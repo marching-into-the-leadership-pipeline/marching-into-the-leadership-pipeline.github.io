@@ -273,6 +273,9 @@ percent_female_scatterplot = px.scatter(df_campus,
                 custom_data = ['institution_name','services_on_campus', 'count_ipeds', 'count_commissioned','count_institution_female','count_rotc_female','count_commissioned_female',"ROTC completion rate","count_rotc", "Female officers commissioned (percent)", "p-value female percent commissioned campus vs ROTC as a whole"],
                 category_orders={"campus_category_unique_for_icons_and_dropdowns": ["All Other Schools", "Military Colleges", "Historically Black Colleges and Universities (HBCUs)"] #order so that "All other schools" are on the bottom
                                  },
+                #808 px appears to be the maximum possible width of the Sage publications text column.
+                height=808,
+                width=808,
                 #title="Figure S1:  The relationship between student and ROTC-graduate gender",
 )
 
@@ -396,7 +399,7 @@ df_campus["Female officers commissioned"]=df_campus["count_commissioned_female"]
 # configure the behavior of plotly HTML output in the web browser
 config_dict= dict(
             displayModeBar = False,  #False suppresses the plotly zoom and pan tools.
-            responsive=True) 
+            responsive=False) 
 
 
 for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_scatter_all_other_races_female", "completion_rate_scatter"]:
@@ -417,7 +420,9 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
                 "Annual average female students enrolling in ROTC:  %{customdata[5]:.1f}",
                 "Annual average female students commissioned:  %{customdata[6]:.1f}" ,
                 "Female officers commissioned (p-value):  %{customdata[9]:.1f}% (%{customdata[10]:.3f})" ,
-                "We report the p-value for the hypothesis that the proportion of female officers commissioned on this campus is equal to", "the proportion commissioned in the rest of the ROTC program." ,
+                "We report the p-value for the hypothesis that the proportion",
+                "of female officers commissioned on this campus is equal to",
+                "the proportion commissioned in the rest of the ROTC program." ,
                 "<extra></extra>"
             ])
     )
@@ -468,6 +473,10 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
 
     fig.show()
     supplement_jinja_data[fig_name]=fig.to_html(config=config_dict, include_plotlyjs="https://cdn.plot.ly/plotly-2.29.1.min.js",full_html=False)
+    
+    #output a version that the journal can insert into their content management system.
+    with open(os.path.join(HTML_output_directory, f"{fig_name}.html"), "w") as interactive_graphic_html:
+        interactive_graphic_html.write(supplement_jinja_data[fig_name])
 
 
 
@@ -704,6 +713,14 @@ HBCU_production_by_size.show()
 supplement_jinja_data["production_of_African_Americans_and_women_by_HBCU_size_figure"]= HBCU_production_by_size.to_html(config=config_dict, include_plotlyjs="https://cdn.plot.ly/plotly-2.29.1.min.js",full_html=False)
 
 # insert the graphics, tables, and numbers into the template.
+
+input_template_path = os.path.join(template_directory, "marching into the leadership pipeline.md")
+output_html_path = os.path.join(template_directory,"marching into the leadership pipeline.html")
+with open(output_html_path, "w", encoding="utf-8") as output_file:
+    with open(input_template_path, encoding="utf-8") as template_file:
+        j2_template = Template(markdown.markdown(template_file.read(), extensions=['footnotes']))
+        output_file.write(j2_template.render(supplement_jinja_data))
+
 
 input_template_path = os.path.join(template_directory, "supplement.md")
 output_html_path = os.path.join(template_directory,"ROTC_supplement.html")
