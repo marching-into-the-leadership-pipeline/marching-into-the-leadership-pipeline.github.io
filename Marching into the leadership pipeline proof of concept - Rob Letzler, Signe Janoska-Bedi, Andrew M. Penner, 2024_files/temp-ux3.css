@@ -1,0 +1,43 @@
+/*
+#pb-editor:not(.pb-role-designer) [data-pb-dropzone]:after, #pb-editor:not(.pb-role-designer) .pb-dropzone:after{
+	content:"";
+}
+#pb-editor:not(.pb-role-designer) [data-pb-dropzone], #pb-editor:not(.pb-role-designer) .pb-dropzone{
+	border:none;
+}
+#pb-editor li.tab__nav__item {
+	max-width: 120px;
+	overflow: hidden;
+}
+*/
+/* LIT-580271 - fallback
+iframe {
+	width: 100%;
+	min-height: 95px;
+	height: fit-content;
+}*/
+/*SAGE-7203 - temporary*/
+img.email-confirmation__icon {
+	width: 2.75rem;
+	height: 2.75rem
+}
+/* Journal homepage - LIT-589747 - temporary */
+.moreFromButton.smallButton a {
+	width: 14.5rem;
+	font-size: .875rem;
+	line-height: 1.667;
+	text-transform: capitalize;
+	padding: 0 1rem;
+	background-color: #046ff8;
+	color: #fff;
+	border-color: #046ff8;
+	text-decoration: none;
+}
+.podcasts table .smallButton a{
+	background-image: url(/pb-assets/UX3/images/download-default.svg);
+	background-size: 1.75rem;
+}
+/*LIT-590154 - temporary*/
+.swipe__wrapper .scroll{
+	overflow:auto
+ }
