@@ -472,11 +472,14 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
     )
 
     fig.show()
-    supplement_jinja_data[fig_name]=fig.to_html(config=config_dict, include_plotlyjs="https://cdn.plot.ly/plotly-2.29.1.min.js",full_html=False)
+    #include_plotlyjs="plotly-2.29.1.min.js" implies that there is a copy of plotly-2.29.1.min.js on the web server in the same folder as 
+    #the HTML.  That makes efficient use of disk space and means that you are not vulnerable to e.g. Plotly turning off its webserver
+    #or to it removing old versions from its webserver.
+    supplement_jinja_data[fig_name]=fig.to_html(config=config_dict, include_plotlyjs="plotly-2.29.1.min.js",full_html=False)
     
     #output a version that the journal can insert into their content management system.
     with open(os.path.join(HTML_output_directory, f"{fig_name}.html"), "w") as interactive_graphic_html:
-        interactive_graphic_html.write(supplement_jinja_data[fig_name])
+        interactive_graphic_html.write(fig.to_html(config=config_dict, include_plotlyjs="plotly-2.29.1.min.js",full_html=True))
 
 
 
@@ -496,7 +499,7 @@ net_impact_of_host_diversity_scatter_all_other_races_female.update_traces(hovert
             ])
     )
 
-supplement_jinja_data["net_impact_of_host_diversity_scatter_all_other_races_female"]=net_impact_of_host_diversity_scatter_all_other_races_female.to_html(config=config_dict, include_plotlyjs="https://cdn.plot.ly/plotly-2.29.1.min.js",full_html=False)
+supplement_jinja_data["net_impact_of_host_diversity_scatter_all_other_races_female"]=net_impact_of_host_diversity_scatter_all_other_races_female.to_html(config=config_dict, include_plotlyjs="plotly-2.29.1.min.js",full_html=False)
 
 # # characterize the median institution to compare to small HBCUs
 
@@ -710,16 +713,23 @@ HBCU_production_by_size.update_layout(
 
 HBCU_production_by_size.show()
 
-supplement_jinja_data["production_of_African_Americans_and_women_by_HBCU_size_figure"]= HBCU_production_by_size.to_html(config=config_dict, include_plotlyjs="https://cdn.plot.ly/plotly-2.29.1.min.js",full_html=False)
+supplement_jinja_data["production_of_African_Americans_and_women_by_HBCU_size_figure"]= HBCU_production_by_size.to_html(config=config_dict, include_plotlyjs="plotly-2.29.1.min.js",full_html=False)
+
+#full_html should be True for standalone, graph only output files linked from Sage and false for interactive graphics that will be inserted 
+# into author supplied markdown or HTML
+with open(os.path.join(HTML_output_directory, "HBCU_production_by_size.html"), "w") as interactive_graphic_html:
+        interactive_graphic_html.write(HBCU_production_by_size.to_html(config=config_dict, include_plotlyjs="plotly-2.29.1.min.js",full_html=True))
+
 
 # insert the graphics, tables, and numbers into the template.
 
-input_template_path = os.path.join(template_directory, "marching into the leadership pipeline.md")
-output_html_path = os.path.join(template_directory,"marching into the leadership pipeline.html")
-with open(output_html_path, "w", encoding="utf-8") as output_file:
-    with open(input_template_path, encoding="utf-8") as template_file:
-        j2_template = Template(markdown.markdown(template_file.read(), extensions=['footnotes']))
-        output_file.write(j2_template.render(supplement_jinja_data))
+#we moved the main paper to LaTeX to fit into the Sage submission system and did not integrate the final changes into the markdown
+#input_template_path = os.path.join(template_directory, "marching into the leadership pipeline.md")
+#output_html_path = os.path.join(template_directory,"marching into the leadership pipeline.html")
+#with open(output_html_path, "w", encoding="utf-8") as output_file:
+#    with open(input_template_path, encoding="utf-8") as template_file:
+#        j2_template = Template(markdown.markdown(template_file.read(), extensions=['footnotes']))
+#        output_file.write(j2_template.render(supplement_jinja_data))
 
 
 input_template_path = os.path.join(template_directory, "supplement.md")
