@@ -88,8 +88,8 @@ df_campus["pct_commissioned"] = df_campus["count_commissioned"]/(df_campus["coun
 df_campus["proportion_female_students_commissioned"]=df_campus["count_commissioned_female"]/(df_campus["count_institution_female"])
 df_campus["Female ROTC enrollees (percent)"]=100*df_campus["count_rotc_female"]/(df_campus["count_rotc_female"]+df_campus["count_rotc_male"])
 df_campus["ROTC completion rate"]=100*df_campus["count_commissioned"]/(df_campus["count_rotc"])
-df_campus["ROTC completion rate for women"]=100*df_campus["count_commissioned_female"]/(df_campus["count_rotc_female"])
-df_campus["ROTC completion rate for Blacks"]=100*df_campus["count_commissioned_black"]/(df_campus["count_rotc_black"])
+df_campus["ROTC completion rate for female cadets"]=100*df_campus["count_commissioned_female"]/(df_campus["count_rotc_female"])
+df_campus["ROTC completion rate for Black cadets"]=100*df_campus["count_commissioned_black"]/(df_campus["count_rotc_black"])
 df_campus["pct_male_students_commissioned"]=df_campus["count_commissioned_male"]/(df_campus["count_institution_male"])
 
 # compute the percent of officers commissioned at minority serving institutions who are female before combing that category with 
@@ -140,6 +140,11 @@ for var_type in ["male","female", "black"]:
 
 summary_df_original_names = summary_df.copy()
 
+#sorting by Male ROTC enrollees puts HBCUs first, then Military Colleges, then all other schools 
+# -- which is the desired order for these tables.
+summary_df.sort_values("count_rotc_male", ascending=True, inplace=True)
+
+
 # apply column headers for output tables
 summary_df.rename(columns={
         "campus_category_unique_for_icons_and_dropdowns":"Campus type",
@@ -147,7 +152,7 @@ summary_df.rename(columns={
         "count_ipeds":"Total students",
         "count_institution_black":"Black students",
         "pct_institution_female":"Female students (percent)",
-        "pct_institution_black":"Blacks students (percent)",
+        "pct_institution_black":"Black students (percent)",
         "count_rotc_female":"Female ROTC enrollees",
         "count_rotc_male":"Male ROTC enrollees",
         "count_rotc_black":"Black ROTC enrollees",
@@ -346,16 +351,14 @@ net_impact_of_host_diversity_scatter_all_other_races_female = px.scatter(
 net_impact_of_host_diversity_scatter_all_other_races_female.add_vline(0,line_width=0.5,  line_color="gray")
 net_impact_of_host_diversity_scatter_all_other_races_female.add_hline(0, line_width=0.5,line_color="gray")
 
-completion_rate_scatter = px.scatter(df_campus[(df_campus["count_rotc_black"]>=2) & (df_campus["count_rotc_female"]>=2) ], x="ROTC completion rate for Blacks", y="ROTC completion rate for women",  color=f"campus_category_unique_for_icons_and_dropdowns",
+#Campus level ROTC completion rates for Black and female cadets
+completion_rate_scatter = px.scatter(df_campus[(df_campus["count_rotc_black"]>=2) & (df_campus["count_rotc_female"]>=2) ], x="ROTC completion rate for Black cadets", y="ROTC completion rate for female cadets",  color=f"campus_category_unique_for_icons_and_dropdowns",
                         size=f'count_commissioned_female', 
                         custom_data = ['institution_name','services_on_campus', f'count_ipeds', 'count_commissioned',f'count_institution_female',f'count_rotc_female',f'count_commissioned_female', "ROTC completion rate","count_rotc", "Female officers commissioned (percent)", "p-value female percent commissioned campus vs ROTC as a whole"],
                 category_orders={"campus_category_unique_for_icons_and_dropdowns": ["All Other Schools", "Military Colleges", "Historically Black Colleges and Universities (HBCUs)"]}, #order so that "All other schools" are on the bottom
-                #title="Campus level ROTC completion rates for Blacks and women"
                 )
 # Lines are mean completion rates. Solid lines give each recruit equal weight.<br>The dashed blue lines show the ROTC-wide completion rate for men and for students of races other than Black
-# completion_rate_scatter.add_hline(df_campus["ROTC completion rate for women"].mean(), line = dict(color='firebrick', dash='dot'))
 completion_rate_scatter.add_vline(100*(int(dod_wide_summary[f"count_commissioned_black"])/int(dod_wide_summary[f"count_rotc_black"])),annotation={"text":"Percentage of<br> Black ROTC cadets<br> who earn a commission"}, annotation_position="bottom left",line_width=0.5,annotation_align="right")
-# completion_rate_scatter.add_vline(df_campus["ROTC completion rate for Blacks"].mean(), line = dict(color='firebrick', dash='dot'))
 completion_rate_scatter.add_vline(completion_rate_races_other_than_black, line = dict(color='blue', dash='dash'), annotation={"text":"Percentage of <br>non-Black ROTC cadets<br> who earn a commission"}, annotation_position="top right",line_width=0.8,annotation_align="left")
 completion_rate_scatter.add_hline(100*(int(dod_wide_summary[f"count_commissioned_female"])/int(dod_wide_summary[f"count_rotc_female"])),annotation={"text":"Percentage of<br> female ROTC cadets<br> who earn a commission"}, annotation_position="bottom right",line_width=0.5, )
 completion_rate_scatter.add_hline(100*(int(dod_wide_summary[f"count_commissioned_male"])/int(dod_wide_summary[f"count_rotc_male"])), line = dict(color='blue', dash='dash'),annotation={"text":"Percentage of<br> male ROTC cadets<br> who earn a commission"},line_width=0.8,)
@@ -562,12 +565,12 @@ df_hbcu["pct_of_all_black_students"]=100*df_hbcu["count_institution_black"]/df_h
 df_hbcu["pct_of_all_female_students"]=100*df_hbcu["count_institution_female"]/df_hbcu["count_institution_female"].sum()
 df_hbcu["pct_of_all_students"]=100*df_hbcu["count_ipeds"]/df_hbcu["count_ipeds"].sum()
 
-
 count_df = df_hbcu[["commissioning size category", "institution_name"]].groupby("commissioning size category", observed=False).count().rename(columns={"institution_name":"Number of ROTC host campuses"}).copy()
 
 
 df_hbcu_summarized = df_hbcu.groupby("commissioning size category", observed=False).agg("sum").reset_index()
 df_hbcu_summarized= pd.merge(df_hbcu_summarized, count_df, on="commissioning size category").reset_index()
+
 
 df_hbcu_summarized["retention_rate_black"] = df_hbcu_summarized["count_commissioned_black"]/df_hbcu_summarized["count_rotc_black"]
 df_hbcu_summarized["recruiting_rate_black"] = df_hbcu_summarized["count_rotc_black"]/df_hbcu_summarized["count_institution_black"]
@@ -593,7 +596,7 @@ HBCU_size_category_table=df_hbcu_summarized[["commissioning size category",
                                                   "count_commissioned_male",
                                                   ]
                    ].rename(columns={
-                    "commissioning size category":"Size category:  Number of officers commissioned per year",
+                    "commissioning size category":"HBCU Size category:  Number of officers commissioned per year",
                     "recruiting_rate_female":"Percentage of female students who enroll in ROTC",
                     "count_institution_female":"Female students",
                     "count_institution_black":"Black students",
@@ -617,7 +620,7 @@ HBCU_size_category_table_rotc_rates=df_hbcu_summarized[[
                                                   "recruiting_rate_male",
                                                   "retention_rate_male",]
                    ].rename(columns={
-                    "commissioning size category":"Size category:  Number of officers commissioned per year",
+                    "commissioning size category":"HBCU Size category:  Number of officers commissioned per year",
                     "recruiting_rate_female":"Percentage of female students who enroll in ROTC",
                     "retention_rate_female":"Percentage of female enrollees who earn a commission",
                     "recruiting_rate_black":"Percentage of Black students who enroll in ROTC",
