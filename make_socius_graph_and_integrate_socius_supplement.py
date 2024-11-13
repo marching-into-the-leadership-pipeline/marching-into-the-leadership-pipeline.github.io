@@ -278,8 +278,10 @@ percent_female_scatterplot = px.scatter(df_campus,
                 custom_data = ['institution_name','services_on_campus', 'count_ipeds', 'count_commissioned','count_institution_female','count_rotc_female','count_commissioned_female',"ROTC completion rate","count_rotc", "Female officers commissioned (percent)", "p-value female percent commissioned campus vs ROTC as a whole"],
                 category_orders={"campus_category_unique_for_icons_and_dropdowns": ["All Other Schools", "Military Colleges", "Historically Black Colleges and Universities (HBCUs)"] #order so that "All other schools" are on the bottom
                                  },
-                #808 px appears to be the maximum possible width of the Sage publications text column.
-                height=808,
+                #808 px appears to be the maximum possible width of the Sage publications text column, but they do not currently put interactive graphics there
+                #needed to set the height smaller to accommodate the source line on a 1920x1080 monitor
+                #the scale ratio elsewhere makes the axes 1:1 to 1% on X equals 1% on Y and makes the graph area square.
+                height=780,
                 width=808,
                 #title="Figure S1:  The relationship between student and ROTC-graduate gender",
 )
@@ -458,19 +460,28 @@ for fig_name in ["percent_female_scatterplot",  "net_impact_of_host_diversity_sc
                     tickcolor="white",  # adjust color of the tick
                     ticklen=4  # adjust length of the tick = distance from axis
                     )
+    
 
     #move the legend to the bottom left of the graph and make it horizontal
     fig.update_layout(
+        title=dict(text="Source:  United States Government Accountability Office",
+                   yref="container",
+                   xanchor="center",
+                  #setting y to 0 cuts off the bottom of the Y
+                  x=0.5, y=0.005, font=dict(size=12)),
         legend=dict(
             orientation="h",
-            yanchor="top",
-            y=-0.1,
+            yref="container",
+            #yanchor="top",
+            y=0.03,
+            #y=-0.07,
             xanchor="center",
             x=0.5,
             title_text="",
             #put HBCUs first in the legend order, then military colleges second, then all other schools third and the line 4th
             traceorder="reversed"
         ),
+        margin=dict(t=1),
         plot_bgcolor='white',
     )
 
